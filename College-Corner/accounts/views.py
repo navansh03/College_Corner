@@ -1,35 +1,39 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, logout
+from CollegeCorner.views import homepage
 
-def signup_view(request):
-    if request.method == 'POST':
-         form = UserCreationForm(request.POST)
-         if form.is_valid():
-             user = form.save()
-             #  log the user in
-             login(request, user)
-             return redirect('Product_Catalog:ProductList')
-    else:
-        form = UserCreationForm()
-        return render(request, 'accounts/signup.html', { 'form': form })
+@login_required(login_url='login/')
+def home(request):
+    return homepage(request)
 
 def login_view(request):
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            # log the user in
-            user = form.get_user()
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is None:
+            error_message = 'Invalid login credentials.'
+            return render(request, 'accounts/login.html', {'error_message': error_message})
+            
+        else:
             login(request, user)
-            if 'next' in request.POST:
-                return redirect(request.POST.get('next'))
-            else:
-               return redirect('Product_Catalog:ProductList')
+            return homepage(request)
+            
     else:
-        form = AuthenticationForm()
-        return render(request, 'accounts/login.html', { 'form': form })
+        return render(request, 'accounts/login.html')
 
+@login_required(login_url='login')
 def logout_view(request):
+    logout(request)
+    return homepage(request)
+    
+def signup_view(request):
     if request.method == 'POST':
-            logout(request)
-            return redirect('Product_Catalog:ProductList')
+        # Handle signup form submission
+        # Extract and save user registration data
+        # You can use Django's built-in UserCreationForm or create your own form
+        # Redirect to the login page after successful signup
+        return homepage(request)
+    else:
+        return render(request, 'accounts/signup.html')

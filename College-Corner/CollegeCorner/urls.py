@@ -8,10 +8,10 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/',include('accounts.urls')),
+    path('',include('accounts.urls')),
+    path('cart/',include('Cart_and_Checkout.urls')),
     path('ourproducts/',include('Product_Catalog.urls')),
     path('about/', views.about),
-    path('', views.homepage,name='home'),
     
 ]
 

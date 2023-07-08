@@ -17,7 +17,7 @@
                         <img src="{% static 'user.png' %}" alt="profile" width="30" height="30" /></a>
                 </li>
                 <li>
-                    <a href="Cart.html"><img src="{% static 'shopping-cart.png' %}" alt="my cart" width="30"
+                    <a href="{% url 'Cart:cartlist' %}"><img src="{% static 'shopping-cart.png' %}" alt="my cart" width="30"
                             height="30" /></a>
                 </li>
                 <div class="input-wrapper">
